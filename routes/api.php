@@ -26,4 +26,7 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
 
 Route::middleware('auth:sanctum')->group(function(){
     Route::post('/cart', [CartController::class, 'add']);
+    Route::get('/cart', [CartController::class, 'index']);
+    Route::put('/cart/{id}', [CartController::class, 'update']); // <-- include {id}
+    Route::delete('/cart/{id}', [CartController::class, 'remove']);
 });

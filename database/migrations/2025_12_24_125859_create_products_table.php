@@ -13,17 +13,31 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('description')->nullable();
-            $table->decimal('price', 10, 2);
-            $table->decimal('discount_price', 10, 2)->nullable();
-            $table->string('brand');
-            $table->string('image')->nullable();
-            $table->integer('stock')->default(0);
 
-            $table->foreignId('category_id')
-            ->constrained('categories')
-            ->onDelete('cascade');
+            $table->string('name');
+            $table->decimal('price', 10, 2);
+
+            $table->enum('gender', ['Women', 'Men']);
+
+            $table->text('description')->nullable();
+
+            $table->string('category');
+            $table->string('brand')->nullable();
+
+            $table->enum('tag', [
+                'None',
+                'Popular',
+                'Best Selling',
+                'Featured',
+                'New Arrival'
+            ])->default('None');
+
+            $table->decimal('discount_price', 10, 2)->nullable();
+            $table->decimal('discount_percent', 5, 2)->nullable();
+
+            $table->integer('stock');
+
+            $table->string('image');
 
             $table->timestamps();
         });

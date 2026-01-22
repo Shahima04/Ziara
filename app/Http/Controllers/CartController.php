@@ -51,7 +51,7 @@ class CartController extends Controller
     }
 
     //update quantity of a cart item
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'quantity' => 'required|integer|min:1'
@@ -69,6 +69,22 @@ class CartController extends Controller
         return response()->json([
             'message' => 'Cart updated successfully',
             'cart' => $cartItem->load('product')
+        ]);
+    }
+
+    //remove a product from the cart
+    public function remove(Request $request, $id)
+    {
+        $user_id = $request->user()->id;
+
+        $cartItem = Cart::where('id', $id)
+            ->where('user_id', $user_id)
+            ->firstOrFail();
+
+        $cartItem->delete();
+
+        return response()->json([
+            'message' => 'Product removed from cart'
         ]);
     }
 }
