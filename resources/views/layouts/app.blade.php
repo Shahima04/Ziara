@@ -21,7 +21,9 @@
         <x-banner />
 
         <div class="min-h-screen bg-gray-100">
+            @auth
             @livewire('navigation-menu')
+            @endauth
 
             <!-- Page Heading -->
             @if (isset($header))

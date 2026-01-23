@@ -9,12 +9,10 @@ use Illuminate\Support\Facades\Http;
 class LogoutController extends Controller
 {
     public function logout(Request $request)
-{
-    Auth::logout();
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
-
-    return view('admin.logout'); // just for testing
-}
-
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('login');
+    }
 }
