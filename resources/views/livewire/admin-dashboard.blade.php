@@ -11,7 +11,7 @@
 
     <div class="max-w-7xl mx-auto px-4 py-8">
         <div class="bg-white rounded-lg shadow-md p-6">
-            <h2 class="text-2xl font-bold mb-4">Welcome, Admin {{ auth()->user()->name }}!</h2>
+            <h2 class="text-2xl font-bold mb-4">Welcome, {{ auth()->user()->name }}!</h2>
             <p class="text-gray-600">This is your admin dashboard.</p>
         </div>
     </div>
