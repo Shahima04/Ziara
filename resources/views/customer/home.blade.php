@@ -8,15 +8,11 @@
 </head>
 <body class="bg-white text-gray-800 font-sans">
 
+@include('partials.customer-navbar')
 <!-- Navbar -->
 <header class="bg-gray-100 shadow">
     <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
         <a href="{{ url('/') }}" class="text-2xl font-bold text-gray-800">Ziara</a>
-
-        <nav class="space-x-6 uppercase text-gray-700 font-medium hidden md:flex">
-            <a href="{{ route('dashboard') }}" class="hover:text-black">Home</a>
-           
-        </nav>
 
         <div class="space-x-4">
             @auth
@@ -46,21 +42,7 @@
 </section>
 
 <!-- Best Selling Products -->
-<section class="max-w-7xl mx-auto px-6 py-10">
-    <h2 class="text-3xl font-bold mb-6">Best Selling Products</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        @forelse($bestSellingProducts as $product)
-            <div class="border rounded p-4 shadow hover:shadow-lg transition">
-                <img src="{{ $product->image }}" alt="{{ $product->name }}" class="h-64 w-full object-cover mb-3 rounded">
-                <h3 class="font-bold text-lg">{{ $product->name }}</h3>
-                <p class="text-gray-600">Brand: {{ $product->brand }}</p>
-                <p class="text-gray-800 font-semibold">Rs {{ number_format($product->price, 2) }}</p>
-            </div>
-        @empty
-            <p>No products found.</p>
-        @endforelse
-    </div>
-</section>
+
 
 <!-- Shop by Category -->
 <section class="bg-gray-50 py-10">

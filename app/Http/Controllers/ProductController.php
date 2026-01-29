@@ -9,19 +9,12 @@ use Illuminate\Http\Request;
 class ProductController extends Controller
 {
     
-    //displays a form in the admin panel to create a new product
-    public function create()
-    {
-        return view('admin.add_product');
-    }
-
-    //displaya list of all products
+    //displays list of all products
     public function index()
     {
-        $products = Product::latest()->get();
-        return view('admin.products', compact('products'));
+        return response()->json(Product::latest()->get());
     }
-
+    
     //display a single product
     public function show($id)
     {
@@ -70,4 +63,36 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products')->with('success','Product added successfully.');
     }
+
+    public function update(Request $request, $id)
+    {
+    $product = Product::find($id);
+
+    if (!$product) {
+        return response()->json([
+            'message' => 'Product not found'
+        ], 404);
+    }
+
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'price' => 'required|numeric',
+        'gender' => 'required',
+        'category' => 'required',
+        'stock' => 'required|integer',
+        'brand' => 'nullable|string',
+        'tag' => 'nullable|string',
+        'discount_price' => 'nullable|numeric',
+        'discount_percent' => 'nullable|numeric',
+        'description' => 'nullable|string',
+    ]);
+
+    $product->update($validated);
+
+    return response()->json([
+        'message' => 'Product updated successfully',
+        'product' => $product
+    ]);
+}
+
 }
