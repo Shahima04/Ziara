@@ -19,6 +19,12 @@ class Products extends Component
     public $discount_price, $discount_percent;
     public $stock, $image;
 
+    // Filter fields (for customer view)
+    public $filterGender;
+    public $filterCategory;
+    public $filterTag;
+    public $priceSort; // 'low' or 'high'
+
     protected $rules = [
         'name' => 'required|string|max:255',
         'price' => 'required|numeric',
@@ -50,7 +56,6 @@ class Products extends Component
         ]);
 
         session()->flash('message', 'Product saved successfully.');
-
         $this->resetForm();
         $this->showList(); 
     }
@@ -128,11 +133,44 @@ class Products extends Component
         ]);
     }
 
+    // FILTERED PRODUCTS FOR CUSTOMER VIEW
+    public function getFilteredProducts()
+    {
+        $query = Product::query();
+
+        if ($this->filterGender) {
+            $query->where('gender', $this->filterGender);
+        }
+
+        if ($this->filterCategory) {
+            $query->where('category', $this->filterCategory);
+        }
+
+        if ($this->filterTag) {
+            $query->where('tag', $this->filterTag);
+        }
+
+        if ($this->priceSort === 'low') {
+            $query->orderBy('price', 'asc');
+        } elseif ($this->priceSort === 'high') {
+            $query->orderBy('price', 'desc');
+        }
+
+        return $query->get();
+    }
+
     // RENDER VIEW
     public function render()
     {
+        // For admin: show all products
+        if ($this->view !== 'list' && $this->view !== 'create' && $this->view !== 'edit') {
+            $products = $this->getFilteredProducts();
+        } else {
+            $products = Product::all();
+        }
+
         return view('livewire.products', [
-            'products' => Product::all()
+            'products' => $products
         ]);
     }
 }

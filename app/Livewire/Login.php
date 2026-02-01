@@ -15,6 +15,7 @@ class Login extends Component
         'password' => 'required',
     ];
 
+    //when user submits the login form
     public function login()
     {
         $this->validate();
@@ -25,8 +26,10 @@ class Login extends Component
         )) {
             session()->regenerate();
 
+            //get authenticated user
             $user = Auth::user();
 
+            //redirect based on user role
             if ($user->role === 'admin') {
                 return redirect()->route('admin.dashboard');
             }
@@ -42,4 +45,6 @@ class Login extends Component
     return view('livewire.login');
     
 }
+
 }
+

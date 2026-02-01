@@ -6,9 +6,9 @@
     <title>My Cart - Ziara</title>
     @vite('resources/css/app.css')
 </head>
-<body class="bg-gray-100">
+<body class="bg-white">
 
-    @include('partials.customer-navbar')
+    @livewire('navigation-menu')
 
     <main class="max-w-7xl mx-auto px-6 py-12">
         <h1 class="text-3xl font-bold mb-6">My Cart</h1>
@@ -25,14 +25,40 @@
                     <th class="p-3 text-left">Total</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td class="p-3">Product 1</td>
-                    <td class="p-3">$29.99</td>
-                    <td class="p-3">2</td>
-                    <td class="p-3">$59.98</td>
-                </tr>
+            <tbody id="cart-table-body">
             </tbody>
+            <script>
+            function fetchCart() {
+                axios.get('/api/cart', { withCredentials: true })
+                    .then(res => {
+                        const tbody = document.getElementById('cart-table-body');
+                        tbody.innerHTML = '';
+
+                        if (res.data.length === 0) {
+                            tbody.innerHTML = `
+                                <tr>
+                                    <td colspan="4" class="p-3 text-center">Your cart is empty.</td>
+                                </tr>`;
+                            return;
+                        }
+
+                        res.data.forEach(item => {
+                            const total = (item.product.price * item.quantity).toFixed(2);
+                            tbody.innerHTML += `
+                                <tr>
+                                    <td class="p-3">${item.product.name}</td>
+                                    <td class="p-3">$${item.product.price}</td>
+                                    <td class="p-3">${item.quantity}</td>
+                                    <td class="p-3">$${total}</td>
+                                </tr>`;
+                        });
+                    })
+                    .catch(err => console.error('Error fetching cart:', err));
+            }
+
+            // Fetch cart on page load
+            fetchCart();
+    </script>
         </table>
     </main>
 

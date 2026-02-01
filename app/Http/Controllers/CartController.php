@@ -4,87 +4,63 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    //add product to cart
+    // Add product to cart
     public function add(Request $request)
     {
+        // Validate input
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer|min:1'
         ]);
-        $user_id = $request->user()->id;
 
-        $cartItem = Cart::where('user_id', $user_id)
-        ->where('product_id', $request->product_id)
-        ->first();
+        $user = Auth::user(); // Get logged-in user
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'You must be logged in to add items to cart.');
+        }
 
-        if($cartItem){
-            $cartItem->increment('quantity', $request->quantity);
-        } else{
-            $cartItem = Cart::create([
-                'user_id' => $user_id,
+        // Check if the product already exists in the cart
+        $cartItem = Cart::where('user_id', $user->id)
+                        ->where('product_id', $request->product_id)
+                        ->first();
+
+        if ($cartItem) {
+            // If exists, increment quantity by 1
+            $cartItem->quantity += 1;
+            $cartItem->save();
+        } else {
+            // Else, create a new cart entry
+            Cart::create([
+                'user_id' => $user->id,
                 'product_id' => $request->product_id,
-                'quantity' => $request->quantity
+                'quantity' => 1,
             ]);
         }
 
-        return response()->json([
-            'message' => 'Product added to cart',
-            'cart' => $cartItem
-        ]);
+        // Redirect back with success message
+        return redirect()->back()->with('success', 'Product added to cart!');
     }
 
-    //view user specific cart
+
+    // View user's cart
     public function index(Request $request)
     {
-        $user_id = $request->user()->id;
+        $user = $request->user();
 
-        $cart = Cart::with('product')
-            ->where('user_id', $user_id)
-            ->get();
+        // Get cart items for logged-in user
+        $cart = Cart::with('product')->where('user_id', $user->id)->get();
 
-        return response()->json([
-            'cart' => $cart
-        ]);
+        return view('customer.cart', compact('cart'));
     }
 
-    //update quantity of a cart item
-    public function update(Request $request, $id)
+    // Remove item from cart
+    public function remove($id)
     {
-        $request->validate([
-            'quantity' => 'required|integer|min:1'
-        ]);
+        $cart = Cart::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+        $cart->delete();
 
-        $user_id = $request->user()->id;
-
-        $cartItem = Cart::where('id', $id)
-            ->where('user_id', $user_id)
-            ->firstOrFail();
-
-        $cartItem->quantity = $request->quantity;
-        $cartItem->save();
-
-        return response()->json([
-            'message' => 'Cart updated successfully',
-            'cart' => $cartItem->load('product')
-        ]);
-    }
-
-    //remove a product from the cart
-    public function remove(Request $request, $id)
-    {
-        $user_id = $request->user()->id;
-
-        $cartItem = Cart::where('id', $id)
-            ->where('user_id', $user_id)
-            ->firstOrFail();
-
-        $cartItem->delete();
-
-        return response()->json([
-            'message' => 'Product removed from cart'
-        ]);
+        return back()->with('success', 'Product removed from cart!');
     }
 }

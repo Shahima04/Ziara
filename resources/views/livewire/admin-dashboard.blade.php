@@ -2,7 +2,8 @@
     <nav class="bg-white shadow-lg">
         <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
             <h1 class="text-xl font-bold">Admin Dashboard</h1>
-            <form method="POST" action="{{ route('logout') }}">
+            <form method="POST" action="{{ route('admin.logout') }}">
+
                 @csrf
                 <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Logout</button>
             </form>
@@ -28,17 +29,21 @@
             <i class="fas fa-home mr-3"></i> Dashboard
         </a>
 
-     <!-- Products -->
+        <!-- Products -->
         <button wire:click="showProducts"
-    class="flex items-center px-4 py-3 mb-2 rounded-lg
-    {{ $page === 'products' ? 'bg-gray-200 text-primary' : 'text-gray-700 hover:bg-gray-100' }}">
-    <i class="fas fa-tshirt mr-3"></i> Products
-</button>
+            class="flex items-center px-4 py-3 mb-2 rounded-lg
+            {{ $page === 'products' ? 'bg-gray-200 text-primary' : 'text-gray-700 hover:bg-gray-100' }}">
+            <i class="fas fa-tshirt mr-3"></i> Products
+        </button>
 
 
-            <button onclick="setActive(this, 'orders')" class="nav-btn w-full flex items-center px-4 py-3 text-primary font-medium rounded-lg">
+           <!-- Orders -->
+            <button wire:click="showOrders"
+                class="flex items-center px-4 py-3 mb-2 rounded-lg
+                {{ $page === 'orders' ? 'bg-gray-200 text-primary' : 'text-gray-700 hover:bg-gray-100' }}">
                 <i class="fas fa-shopping-cart mr-3"></i> Orders
             </button>
+
             <button onclick="setActive(this, 'customers')" class="nav-btn w-full flex items-center px-4 py-3 text-primary font-medium rounded-lg">
                 <i class="fas fa-users mr-3"></i> Customers
             </button>
@@ -48,15 +53,6 @@
             <button onclick="setActive(this, 'settings')" class="nav-btn w-full flex items-center px-4 py-3 text-primary font-medium rounded-lg">
                 <i class="fas fa-cog mr-3"></i> Settings
             </button>
-
-            <div class="pt-4 border-t border-gray-200 mt-auto">
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="w-full flex items-center px-4 py-3 text-red-600 font-medium rounded-lg hover:bg-red-100">
-                        <i class="fas fa-sign-out-alt mr-3"></i> Logout
-                    </button>
-                </form>
-            </div>
         </nav>
     </div>
 
@@ -82,6 +78,13 @@
             <livewire:products />
         </div>
     @endif
+
+    @if($page === 'orders')
+    <div class="flex-1 min-h-screen p-6">
+        @include('orders')
+    </div>
+@endif
+
 </div>
 
 </div>

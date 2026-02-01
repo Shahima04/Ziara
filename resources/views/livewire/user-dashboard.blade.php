@@ -1,6 +1,5 @@
 <div class="min-h-screen bg-gray-100">
 
-    {{-- Include the customer navbar --}}
     @include('partials.customer-navbar')
 
     <div class="max-w-7xl mx-auto px-4 py-8">
@@ -8,6 +7,8 @@
             <h2 class="text-2xl font-bold mb-4">Welcome, {{ auth()->user()->name }}!</h2>
             <p class="text-gray-600">This is your user dashboard.</p>
         </div>
+
+        
 
         {{-- Shop by Category Section --}}
         <section class="px-2 py-10">

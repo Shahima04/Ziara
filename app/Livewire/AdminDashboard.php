@@ -13,11 +13,17 @@ class AdminDashboard extends Component
         $this->page = 'products';
     }
 
+    public function showOrders()
+    {
+        $this->page = 'orders';
+    }
+
     public function showDashboard()
     {
         $this->page = 'dashboard';
     }
     
+    //returns the blade view for this component
     public function render()
     {
         return view('livewire.admin-dashboard');
