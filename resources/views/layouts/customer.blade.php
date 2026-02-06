@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ziara</title>
     @vite('resources/css/app.css') {{-- This loads Tailwind / your CSS --}}
+    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+
 </head>
 <body class="bg-white">
 @livewire('navigation-menu')
